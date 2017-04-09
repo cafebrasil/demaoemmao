@@ -7,10 +7,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.confraria.cafebrasil.logger.Log;
 import com.confraria.cafebrasil.service.LivroService;
 
 @Path("/v1/demaoemmao")
 public class ConfrariaRest {
+	
+	@Inject
+	Log logger;
 	
 	@Inject
 	private LivroService livroService;
@@ -18,7 +22,8 @@ public class ConfrariaRest {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path(value = "/livros")
-	public Response teste(){
+	public Response listarLivros() {
+		logger.info("Recuperar livros Café Brasil");
 		return Response.ok(livroService.listar()).build();
 	}
 

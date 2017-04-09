@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "TB_LIVRO", schema = "demaoemmao")
-@NamedQuery(name = "Livro.listarTodos", 
+@NamedQuery(name = "Livro.listarTodos",
 query = "SELECT new com.confraria.cafebrasil.entity.Livro(l.codigo,l.ativo,l.autor,l.isbn,l.titulo) FROM Livro l ")
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

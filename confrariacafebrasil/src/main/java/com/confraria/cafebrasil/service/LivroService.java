@@ -21,7 +21,7 @@ import com.confraria.cafebrasil.entity.Livro;
 @TransactionManagement(TransactionManagementType.BEAN)
 @LocalBean
 public class LivroService {
-	
+
 	@Inject
 	EntityManager em;
 
