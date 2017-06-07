@@ -21,7 +21,9 @@ public class ConfrariaRest {
 	@Path(value = "/livros")
 	public Response listarLivros() {
 		try {
-			return Response.ok(livroService.listar()).build();
+			return Response
+					.ok(livroService.listar())
+				    .build();
 		} catch (final ConfrariaException e) {
 			return Response.noContent().build();
 		}
