@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -45,6 +46,19 @@ public class Service<T> {
 	 */
 	public List<T> findAll(final String name,final Class<T> entityClass) {
 		return em.createNamedQuery(name,entityClass).getResultList();
+	}
+
+	/***
+	 *
+	 * @param descricao
+	 * @param name
+	 * @param entityClass
+	 * @return List<T>
+	 */
+	public List<T> find(final String descricao, final String name, final Class<T> entityClass) {
+		final TypedQuery<T> createNamedQuery = em.createNamedQuery(name,entityClass);
+		createNamedQuery.setParameter(1, descricao);
+		return createNamedQuery.getResultList();
 	}
 
 	/**

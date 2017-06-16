@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,8 +19,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "TB_LIVRO", schema = "demaoemmao")
-@NamedQuery(name = "Livro.listarTodos",
-query = "SELECT new com.confraria.cafebrasil.entity.Livro(l.codigo,l.ativo,l.autor,l.isbn,l.titulo) FROM Livro l ")
+@NamedQueries({
+	@NamedQuery(name = "Livro.listarTodos",
+			query = "SELECT new com.confraria.cafebrasil.entity.Livro(l.codigo,l.ativo,l.autor,l.isbn,l.titulo)"
+					+ " FROM Livro l ") ,
+	@NamedQuery(name = "Livro.pesquisar", query = ""
+			+ "SELECT new com.confraria.cafebrasil.entity.Livro(l.codigo,l.ativo,l.autor,l.isbn,l.titulo) "
+			+ "FROM Livro l where l.titulo like ?1 or l.autor like ?1") })
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Livro implements Serializable {

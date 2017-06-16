@@ -35,4 +35,14 @@ public class LivroService {
 			throw new ConfrariaException(e.getMessage());
 		}
 	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public List<Livro> pesquisar(final String descricao) throws ConfrariaException {
+		try {
+			return service.find(String.format("%%%s%%", descricao),"Livro.pesquisar", Livro.class);
+		}catch (final Exception e) {
+			logger.info(String.format("Rest /livros - %s", e.getMessage()));
+			throw new ConfrariaException(e.getMessage());
+		}
+	}
 }
