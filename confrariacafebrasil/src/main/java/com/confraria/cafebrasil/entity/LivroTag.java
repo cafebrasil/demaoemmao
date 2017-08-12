@@ -1,13 +1,53 @@
 package com.confraria.cafebrasil.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name="TB_LIVRO_TAG", schema = "demaoemmao")
-@NamedQuery(name="LivroTag.findAll", query="SELECT l FROM LivroTag l")
+@NamedQueries({
+		@NamedQuery(name="LivroTag.removeByLivro", query="delete from LivroTag l where l.livro.codigo = ?1"),
+		@NamedQuery(name="LivroTag.findAll", query="SELECT l FROM LivroTag l"),
+		@NamedQuery(name ="LivroTag.findByCodigoLivro",
+			query = "SELECT new com.confraria.cafebrasil.entity.LivroTag(l.codigo,l.ativo,l.livro.codigo,l.tag.codigo,l.tag.descricao) FROM LivroTag l where l.livro.codigo = ?1")
+		})
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class LivroTag implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+
+
+	/**
+	 * @param codigo
+	 * @param ativo
+	 * @param livro
+	 * @param tag
+	 */
+	public LivroTag(final Long codigo, final Boolean ativo, final Long livroCodigo, final Long codigtag, final String descricaoTag) {
+		super();
+		this.codigo = codigo;
+		this.ativo = ativo;
+		setLivro(new Livro());
+		getLivro().setCodigo(livroCodigo);
+		setTag(new Tag());
+		getTag().setCodigo(codigtag);
+		getTag().setDescricao(descricaoTag);
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -38,7 +78,7 @@ public class LivroTag implements Serializable {
 	/**
 	 * @param codigo the codigo to set
 	 */
-	public void setCodigo(Long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -52,7 +92,7 @@ public class LivroTag implements Serializable {
 	/**
 	 * @param ativo the ativo to set
 	 */
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(final Boolean ativo) {
 		this.ativo = ativo;
 	}
 
@@ -66,7 +106,7 @@ public class LivroTag implements Serializable {
 	/**
 	 * @param livro the livro to set
 	 */
-	public void setLivro(Livro livro) {
+	public void setLivro(final Livro livro) {
 		this.livro = livro;
 	}
 
@@ -80,10 +120,7 @@ public class LivroTag implements Serializable {
 	/**
 	 * @param tag the tag to set
 	 */
-	public void setTag(Tag tag) {
+	public void setTag(final Tag tag) {
 		this.tag = tag;
 	}
-
-	
-
 }

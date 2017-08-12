@@ -1,12 +1,33 @@
 package com.confraria.cafebrasil.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name="TB_TAG", schema = "demaoemmao")
-@NamedQuery(name="Tag.findAll", query="SELECT t FROM Tag t")
+@NamedNativeQuery(name = "tag.exists", query = "select 1 from demaoemmao.TB_TAG a "
+		+ "where exists (select 1 from demaoemmao.TB_TAG b where b.CODIGO = a.CODIGO "
+		+ "and a.DESCRICAO =  ?1 )")
+@NamedQueries({
+	@NamedQuery(name = "Tag.listarTodos", query = "SELECT t FROM Tag t") ,
+	@NamedQuery(name = "Tag.recuperarPorDescricao", query = "SELECT t FROM Tag t where t.descricao = ?1 ")})
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Tag implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -19,6 +40,7 @@ public class Tag implements Serializable {
 	private String descricao;
 
 	@OneToMany(mappedBy="tag")
+	@XmlTransient
 	private List<LivroTag> livroTags;
 
 	public Tag() {
@@ -34,9 +56,36 @@ public class Tag implements Serializable {
 	/**
 	 * @param livroTags the livroTags to set
 	 */
-	public void setLivroTags(List<LivroTag> livroTags) {
+	public void setLivroTags(final List<LivroTag> livroTags) {
 		this.livroTags = livroTags;
 	}
 
-	
+	/**
+	 * @return the codigo
+	 */
+	public Long getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * @param codigo the codigo to set
+	 */
+	public void setCodigo(final Long codigo) {
+		this.codigo = codigo;
+	}
+
+	/**
+	 * @return the descricao
+	 */
+	public String getDescricao() {
+		return descricao;
+	}
+
+	/**
+	 * @param descricao the descricao to set
+	 */
+	public void setDescricao(final String descricao) {
+		this.descricao = descricao;
+	}
+
 }

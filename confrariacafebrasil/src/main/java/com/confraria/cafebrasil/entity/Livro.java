@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,21 +25,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 	@NamedQuery(name = "Livro.listarTodos",
 			query = "SELECT new com.confraria.cafebrasil.entity.Livro(l.codigo,l.ativo,l.autor,l.isbn,l.titulo)"
 					+ " FROM Livro l ") ,
-	@NamedQuery(name = "Livro.pesquisar", query = ""
-			+ "SELECT new com.confraria.cafebrasil.entity.Livro(l.codigo,l.ativo,l.autor,l.isbn,l.titulo) "
-			+ "FROM Livro l where l.titulo like ?1 or l.autor like ?1") })
+
+	@NamedQuery(name = "Livro.pesquisar",
+	query = "SELECT new com.confraria.cafebrasil.entity.Livro(l.codigo,l.ativo,l.autor,l.isbn,l.titulo) "
+			+ "FROM Livro l WHERE l.titulo like ?1 or l.autor like ?1 ") ,
+
+@NamedQuery(name = "Livro.contarQuantidadeLivros", query = "SELECT count(l) FROM Livro l ")})
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Livro implements Serializable {
 
-	/**
-	 * @param codigo
-	 * @param ativo
-	 * @param autor
-	 * @param isbn
-	 * @param titulo
-	 */
 	public Livro(final Long codigo, final Boolean ativo, final String autor, final BigInteger isbn,
 			final String titulo) {
 		super();
@@ -79,8 +77,18 @@ public class Livro implements Serializable {
 	@OneToMany(mappedBy = "livro")
 	private List<FilaEspera> esperas;
 
-	@OneToMany(mappedBy = "livro")
-	private List<LivroTag> tags;
+	@OneToMany(mappedBy = "livro",cascade=CascadeType.ALL)
+	private List<LivroTag> livroTags;
+
+	@Transient
+	private String edicao;
+
+	@Transient
+	private String numeroPaginas;
+
+	@Transient
+	private String peso;
+
 
 	public Livro() {
 
@@ -226,19 +234,59 @@ public class Livro implements Serializable {
 	}
 
 	/**
-	 * @return the tags
+	 * @return the livroTags
 	 */
-
-	public List<LivroTag> getTags() {
-		return tags;
+	public List<LivroTag> getLivroTags() {
+		return livroTags;
 	}
 
 	/**
-	 * @param tags
-	 *            the tags to set
+	 * @param livroTags the livroTags to set
 	 */
-	public void setTags(final List<LivroTag> tags) {
-		this.tags = tags;
+	public void setLivroTags(final List<LivroTag> livroTags) {
+		this.livroTags = livroTags;
+	}
+
+	/**
+	 * @return the edicao
+	 */
+	public String getEdicao() {
+		return edicao;
+	}
+
+	/**
+	 * @param edicao the edicao to set
+	 */
+	public void setEdicao(final String edicao) {
+		this.edicao = edicao;
+	}
+
+	/**
+	 * @return the numeroPaginas
+	 */
+	public String getNumeroPaginas() {
+		return numeroPaginas;
+	}
+
+	/**
+	 * @param numeroPaginas the numeroPaginas to set
+	 */
+	public void setNumeroPaginas(final String numeroPaginas) {
+		this.numeroPaginas = numeroPaginas;
+	}
+
+	/**
+	 * @return the peso
+	 */
+	public String getPeso() {
+		return peso;
+	}
+
+	/**
+	 * @param peso the peso to set
+	 */
+	public void setPeso(final String peso) {
+		this.peso = peso;
 	}
 
 }

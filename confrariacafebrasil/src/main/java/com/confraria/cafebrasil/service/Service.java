@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 @Stateless
@@ -40,12 +41,52 @@ public class Service<T> {
 
 	/***
 	 *
+	 * @param entityClass
+	 * @param namedQuery
+	 * @param params
+	 * @return T
+	 */
+	public T find(final Class<T> entityClass, final String namedQuery, final Object... params){
+		try {
+			final TypedQuery<T> createNamedQuery = em.createNamedQuery(namedQuery, entityClass);
+			Integer position = 0;
+			for (final Object param : params) {
+				createNamedQuery.setParameter(++position, param);
+			}
+			return createNamedQuery.getSingleResult();
+		} catch (final NoResultException e) {
+			return null;
+		}
+	}
+
+
+	/****
+	 *
+	 * @param entityClass
+	 * @param namedQuery
+	 * @param params
+	 * @return List<T>
+	 */
+	public List<T> findAllByParams(final Class<T> entityClass, final String namedQuery, final Object... params){
+		try {
+			final TypedQuery<T> createNamedQuery = em.createNamedQuery(namedQuery, entityClass);
+			Integer position = 0;
+			for (final Object param : params) {
+				createNamedQuery.setParameter(++position, param);
+			}
+			return createNamedQuery.getResultList();
+		} catch (final NoResultException e) {
+			return null;
+		}
+	}
+	/***
+	 *
 	 * @param name
 	 * @param entityClass
 	 * @return List<T>
 	 */
-	public List<T> findAll(final String name,final Class<T> entityClass) {
-		return em.createNamedQuery(name,entityClass).getResultList();
+	public List<T> findAll(final String name, final Class<T> entityClass) {
+		return em.createNamedQuery(name, entityClass).getResultList();
 	}
 
 	/***
@@ -56,9 +97,18 @@ public class Service<T> {
 	 * @return List<T>
 	 */
 	public List<T> find(final String descricao, final String name, final Class<T> entityClass) {
-		final TypedQuery<T> createNamedQuery = em.createNamedQuery(name,entityClass);
+		final TypedQuery<T> createNamedQuery = em.createNamedQuery(name, entityClass);
 		createNamedQuery.setParameter(1, descricao);
 		return createNamedQuery.getResultList();
+	}
+
+	/***
+	 *
+	 * @param name
+	 * @param entityClass
+	 */
+	public void delete(final String name, final Class<T> entityClass) {
+		em.createNamedQuery(name, entityClass).executeUpdate();
 	}
 
 	/**

@@ -4,12 +4,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.ws.rs.core.MediaType;
 
 public class Resources {
 
     @Produces
-	@PersistenceContext(unitName = "CafeBrasilPU")
+	@PersistenceContext(unitName = "CafeBrasilPU", type=PersistenceContextType.TRANSACTION)
     private EntityManager em;
 
     @Produces
